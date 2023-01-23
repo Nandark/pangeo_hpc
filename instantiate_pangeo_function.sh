@@ -27,7 +27,7 @@ if [[ "$SYSTEM" == "gadi" ]]; then
     NCPUS=${2:-"4"}
     MEM=${3:-"16GB"}
     PROJECT=${4:-"'$PROJECT'"}
-    PANGEO_ENV_NAME=${5:-"pangeo"}
+    PANGEO_ENV_NAME=${5:-"myenv"}
     NOTEBOOK_DIR=${6:-"~"}
     PANGEO_RUN_SCRIPT_DIR="'$(pwd)'"
 
@@ -51,13 +51,14 @@ elif [[ "$SYSTEM" == "petrichor" ]]; then
     WALLTIME=${1:-"02:00:00"}
     NCPUS=${2:-"8"}
     MEM=${3:-"64GB"}
-    PANGEO_ENV_NAME=${4:-"pangeo"}
+    PANGEO_ENV_NAME=${4:-"myenv"}
     NOTEBOOK_DIR=${5:-"~"}
+    ACCOUNT_ID=${6:-"OD-216744"}
     PANGEO_RUN_SCRIPT_DIR="'$(pwd)'"
 
     rm -f jupyter_instructions.txt
     
-    jobid=$(sbatch --time=${WALLTIME} --mem-per-cpu=${MEM} --cpus-per-task=${NCPUS} \
+    jobid=$(sbatch --time=${WALLTIME} --mem-per-cpu=${MEM} --cpus-per-task=${NCPUS} --account=${ACCOUNT_ID}\
     	--export "NOTEBOOK_DIR=${NOTEBOOK_DIR},RUN_SCRIPT_DIR=${PANGEO_RUN_SCRIPT_DIR},PANGEO_ENV_NAME=${PANGEO_ENV_NAME}" \
 	${PANGEO_RUN_SCRIPT_DIR}/start_jupyter_Petrichor.sh | sed '\''s/[^0-9]*//g'\'')
     while [ ! -f jupyter_instructions.txt ]; do
